@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rezervační Systém</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        header {
+            background-color: #101011;
+            color: white;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        #loginPage, #app {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        #loginForm, #eventForm {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        #eventList {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        li {
+            margin-bottom: 1rem;
+            background-color: #fff;
+            padding: 1rem;
+            border-radius: 8px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .delete-btn {
+            background-color: #ff4d4d;
+            color: white;
+            border: none;
+            padding: 0.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Rezervační Systém</h1>
+</header>
+
+<div id="loginPage">
+    <form id="loginForm">
+        <label for="username">Uživatelské jméno:</label>
+        <input type="text" id="username" required>
+        <label for="password">Heslo:</label>
+        <input type="password" id="password" required>
+        <button type="button" onclick="login()">Přihlásit</button>
+        <p id="error-message" style="color: red;"></p>
+    </form>
+</div>
+
+<div id="app" style="display: none;">
+    <form id="eventForm" style="display: none;">
+        <label for="eventDate">Datum a čas události:</label>
+        <input type="datetime-local" id="eventDate" required>
+        <label for="eventDescription">Popis události:</label>
+        <input type="text" id="eventDescription" required>
+        <button type="button" onclick="addEvent()">Přidat událost</button>
+    </form>
+
+    <div id="eventList">
+        <h2>Aktuální události</h2>
+        <ul id="events"></ul>
+    </div>
+</div>
+
+<script>
+    let currentUser = null;
+    let events = [];
+
+    function login() {
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+
+        if (username === 'jmeno' && password === 'heslo') {
+            currentUser = username;
+            document.getElementById('loginPage').style.display = 'none';
+            document.getElementById('app').style.display = 'flex';
+            document.getElementById('eventForm').style.display = 'block';
+            loadEvents();
+        } else {
+            document.getElementById('error-message').textContent = 'Chybné uživatelské jméno nebo heslo.';
+        }
+    }
+
+    
+
+    function displayEvents() {
+        const eventsList = document.getElementById('events');
+        eventsList.innerHTML = '';
+
+        events.forEach((event, index) => {
+            const li = document.createElement('li');
+            li.innerHTML = `
+                <span>${event.date}</span>
+                <span>${event.description}</span>
+                <button class="delete-btn" onclick="deleteEvent(${index})">Smazat</button>
+            `;
+            eventsList.appendChild(li);
+        });
+    }
+
+    function addEvent() {
+        const eventDate = document.getElementById('eventDate').value;
+        const eventDescription = document.getElementById('eventDescription').value;
+
+        events.push({ date: eventDate, description: eventDescription });
+        displayEvents();
+
+    }
+
+    function deleteEvent(index) {
+        events.splice(index, 1);
+        displayEvents();
+
+    }
+</script>
+
+</body>
+</html>
